@@ -1,27 +1,21 @@
+import Skeleton from "@material-ui/lab/Skeleton";
 import React, { useState, useEffect, Suspense } from "react";
-import imageFile from "./img_avatar.png";
+import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
+
 const ImageComponent = React.lazy(() => import("./ImageComponent"));
 
 const List = () => {
 	const [listItems, setListItems] = useState([]);
-	const [isFetching, setIsFetching] = useState(false);
+	const [isFetching, setIsFetching] = useState(true);
 	const [page_no, setPageno] = useState(1);
+	const [data, setData] = useState(true);
+	let fetching = false;
 
 	useEffect(() => {
-		fetchData();
-		window.addEventListener("scroll", handleScroll);
-	}, []);
-
-	const handleScroll = () => {
-		if (
-			Math.ceil(window.innerHeight + document.documentElement.scrollTop) !==
-				document.documentElement.offsetHeight ||
-			isFetching
-		)
-			return;
-		setIsFetching(true);
-		console.log(isFetching);
-	};
+		if (data) {
+			fetchData();
+		}
+	}, [listItems]);
 
 	const fetchData = async () => {
 		setTimeout(async () => {
@@ -30,15 +24,22 @@ const List = () => {
 			);
 			const data = await result.json();
 			setPageno(page_no + 1);
-			setListItems(() => {
-				return [...listItems, ...data.instagram_post_details];
-			});
-			setIsFetching(false);
+			// debugger;
+			if (data.instagram_post_details.length > 0) {
+				setData(true);
+				setListItems(() => {
+					return [...listItems, ...data.instagram_post_details];
+				});
+				setIsFetching(true);
+			} else {
+				setData(false);
+				setIsFetching(false);
+			}
 		}, 1000);
 	};
 
 	useEffect(() => {
-		if (!isFetching) return;
+		if (!fetching) return;
 		fetchMoreListItems();
 	}, [isFetching]);
 
@@ -48,34 +49,27 @@ const List = () => {
 	};
 
 	return (
-		<>
-			<div className="container">
-				<div className="row">
-					<div className="col-sm-12">
-						<div className="row">
+		<div className="container">
+			<div className="row">
+				<div className="col-sm-12">
+					<ResponsiveMasonry
+						columnsCountBreakPoints={{ 350: 3, 750: 3, 900: 3 }}
+					>
+						<Masonry columnsCount={3} gutter="15px">
 							{listItems.map((listItem) => (
-								<div className="col-sm-4" key={listItem.id}>
-									<Suspense
-										fallback={
-											<img
-												src={imageFile}
-												alt="Avatar"
-												style={{ width: "50%" }}
-											/>
-										}
-									>
-										<ImageComponent
-											src={listItem.post_meta.social_post_image}
-										/>
-									</Suspense>
-								</div>
+								<Suspense
+									key={listItem.id}
+									fallback={<Skeleton animation="wave" />}
+								>
+									<ImageComponent src={listItem.post_meta.social_post_image} />
+								</Suspense>
 							))}
-							{isFetching && <h1>Loading...</h1>}
-						</div>
-					</div>
+						</Masonry>
+					</ResponsiveMasonry>
+					{isFetching && <p>Loading...</p>}
 				</div>
 			</div>
-		</>
+		</div>
 	);
 };
 
