@@ -59,7 +59,9 @@ const List = () => {
 							{listItems.map((listItem) => (
 								<Suspense
 									key={listItem.id}
-									fallback={<Skeleton animation="wave" />}
+									fallback={
+										<Skeleton animation="wave" width={210} height={210} />
+									}
 								>
 									<ImageComponent src={listItem.post_meta.social_post_image} />
 								</Suspense>
