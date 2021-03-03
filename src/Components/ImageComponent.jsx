@@ -2,6 +2,7 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import VideocamIcon from "@material-ui/icons/Videocam";
 import PhotoLibraryIcon from "@material-ui/icons/PhotoLibrary";
+import { Link } from "react-router-dom";
 import Grow from "@material-ui/core/Grow";
 
 const useStyles = makeStyles((theme) => ({
@@ -19,7 +20,13 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const ImageComponent = ({ src, onAddDefaultSrc, section, listItem }) => {
+const ImageComponent = ({
+	src,
+	onAddDefaultSrc,
+	section,
+	listItem,
+	header,
+}) => {
 	const classes = useStyles();
 
 	return section === "header" ? (
@@ -32,27 +39,22 @@ const ImageComponent = ({ src, onAddDefaultSrc, section, listItem }) => {
 			/>
 		</a>
 	) : listItem.post_meta.has_link === "true" ? (
-		<Grow
-			in={true}
-			style={{ transformOrigin: "0 0 0" }}
-			{...(true ? { timeout: 1000 } : {})}
-		>
-			<a
-				href={listItem.post_meta.post_ext_link}
-				target="_blank"
-				rel="noreferrer"
-			>
-				<img
-					src={src}
-					alt="Post"
-					style={{ width: "100%" }}
-					onError={onAddDefaultSrc}
-				/>
-			</a>
-		</Grow>
+		<a href={listItem.post_meta.post_ext_link} target="_blank" rel="noreferrer">
+			<img
+				src={src}
+				alt="Post"
+				style={{ width: "100%" }}
+				onError={onAddDefaultSrc}
+			/>
+		</a>
 	) : (
-		<Grow in={true} {...(true ? { timeout: 1000 } : {})}>
-			<>
+		<>
+			<Link
+				to={{
+					pathname: "/post/" + listItem.post_meta.instagram_id,
+					postDetails: { listItem, header },
+				}}
+			>
 				<img
 					src={src}
 					alt="Post"
@@ -66,8 +68,8 @@ const ImageComponent = ({ src, onAddDefaultSrc, section, listItem }) => {
 				) : (
 					""
 				)}
-			</>
-		</Grow>
+			</Link>
+		</>
 	);
 };
 
