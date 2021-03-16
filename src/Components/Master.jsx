@@ -1,11 +1,12 @@
+import Axios from "axios";
+import config from "../services/config.json";
 import Skeleton from "@material-ui/lab/Skeleton";
 import { makeStyles } from "@material-ui/core/styles";
 import React, { useState, useEffect, Suspense } from "react";
-import config from "../services/config.json";
-import Axios from "axios";
 import ImagePlaceholder from "../images/image_placeholder.png";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
+// import Loader from "./Loader/Loader";
 
 const ImageComponent = React.lazy(() => import("./ImageComponent"));
 
@@ -35,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
 			margin: "20px auto",
 			textAlign: "center",
 			marginBottom: 10,
+			width: "80%",
 		},
 	},
 	h1: {
@@ -46,6 +48,51 @@ const useStyles = makeStyles((theme) => ({
 	circular: {
 		position: "absolute",
 		left: "50%",
+		marginLeft: -20,
+		marginBottom: 30,
+	},
+	skeleton: {
+		display: "flex",
+		flexWrap: "wrap",
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	skeleton_post: {
+		width: 250,
+		height: 250,
+		margin: "15px",
+		[theme.breakpoints.down("xs")]: {
+			width: 80,
+			height: 80,
+			margin: 10,
+		},
+	},
+	skeleton_logo: {
+		width: 185,
+		height: 161,
+		[theme.breakpoints.down("xs")]: {
+			width: 100,
+			height: 100,
+			margin: "auto",
+		},
+	},
+	skeleton_brand_info: {
+		width: "94%",
+		height: 50,
+		[theme.breakpoints.down("xs")]: {
+			margin: "auto",
+		},
+	},
+	skeleton_brand_desc: {
+		width: 420,
+		height: 120,
+		marginTop: -10,
+		[theme.breakpoints.down("xs")]: {
+			width: "94%",
+			height: 100,
+			margin: "auto",
+			marginTop: -20,
+		},
 	},
 }));
 
@@ -66,12 +113,15 @@ const Master = (props) => {
 
 	const fetchData = async () => {
 		setTimeout(async () => {
-			const result = await Axios.get(config.images_api, {
-				params: {
-					page_no: page_no,
-					per_page: 10,
-				},
-			});
+			const result = await Axios.get(
+				process.env.REACT_APP_SHOPPER_API + config.instagram_post_api,
+				{
+					params: {
+						page_no: page_no,
+						per_page: 10,
+					},
+				}
+			);
 			const data = result.data;
 			setPageno(page_no + 1);
 
@@ -103,26 +153,59 @@ const Master = (props) => {
 		e.target.src = ImagePlaceholder;
 	};
 
+	var rows = [];
+	for (var i = 0; i < 10; i++) {
+		rows.push(
+			<Skeleton
+				variant="rect"
+				key={i}
+				className={classes.skeleton_post}
+				animation="wave"
+			></Skeleton>
+		);
+	}
+
 	return (
 		<div className="container">
 			<div className="row justify-content-center">
 				<div className="col-sm-10">
 					<div className="row justify-content-center">
-						<Suspense
-							fallback={<Skeleton animation="wave" width={210} height={210} />}
-						>
+						<Suspense fallback="">
 							<div className={classes.wrapper}>
-								<ImageComponent
-									src={header.brand_logo}
-									section="header"
-									onAddDefaultSrc={handleAddDefaultSrc}
-								/>
-
+								{header.length === 0 ? (
+									<Skeleton
+										style={{ backgroundColor: "#cacaca" }}
+										variant="circle"
+										className={classes.skeleton_logo}
+									></Skeleton>
+								) : (
+									<ImageComponent
+										src={header.brand_logo}
+										section="header"
+										onAddDefaultSrc={handleAddDefaultSrc}
+									/>
+								)}
 								<div className={classes.brand_information}>
-									<h1 className={classes.h1}>{header.brand_name}</h1>
-									<p className={classes.brand_description}>
-										{header.brand_description}
-									</p>
+									{header.length === 0 ? (
+										<Skeleton
+											variant="text"
+											className={classes.skeleton_brand_info}
+											animation="wave"
+										></Skeleton>
+									) : (
+										<h1 className={classes.h1}>{header.brand_name}</h1>
+									)}
+									{header.length === 0 ? (
+										<Skeleton
+											variant="text"
+											className={classes.skeleton_brand_desc}
+											animation="wave"
+										></Skeleton>
+									) : (
+										<p className={classes.brand_description}>
+											{header.brand_description}
+										</p>
+									)}
 								</div>
 							</div>
 						</Suspense>
@@ -134,30 +217,31 @@ const Master = (props) => {
 					<ResponsiveMasonry
 						columnsCountBreakPoints={{ 350: 3, 750: 3, 900: 3 }}
 					>
-						<Masonry columnsCount={3} gutter="15px" className="masonary">
-							{listItems.map((listItem) => (
-								<Suspense
-									key={listItem.post_details.ID}
-									fallback={
-										<Skeleton animation="wave" width={210} height={210} />
-									}
-								>
-									<ImageComponent
-										src={
-											listItem.post_meta.social_post_image
-												? listItem.post_meta.social_post_image
-												: ""
-										}
-										section="body"
-										listItem={listItem}
-										header={header}
-										onAddDefaultSrc={handleAddDefaultSrc}
-									/>
-								</Suspense>
-							))}
-						</Masonry>
+						{listItems.length !== 0 ? (
+							<Masonry columnsCount={3} gutter="15px" className="masonary">
+								{listItems.map((listItem) => (
+									<Suspense key={listItem.post_details.ID} fallback="">
+										<ImageComponent
+											src={
+												listItem.post_meta.social_post_image
+													? listItem.post_meta.social_post_image
+													: ""
+											}
+											section="body"
+											listItem={listItem}
+											header={header}
+											onAddDefaultSrc={handleAddDefaultSrc}
+										/>
+									</Suspense>
+								))}
+							</Masonry>
+						) : (
+							<div className={classes.skeleton}>{rows}</div>
+						)}
 					</ResponsiveMasonry>
-					{isFetching && <CircularProgress className={classes.circular} />}
+					{isFetching && listItems.length !== 0 && (
+						<CircularProgress color="secondary" className={classes.circular} />
+					)}
 				</div>
 			</div>
 		</div>

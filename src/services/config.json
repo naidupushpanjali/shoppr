@@ -1,3 +1,3 @@
 {
-	"images_api": "https://demo.shoppr.io/wp-json/egram/v1/get_instagram_posts_with_header"
+	"instagram_post_api": "wp-json/egram/v1/get_instagram_posts_with_header"
 }
