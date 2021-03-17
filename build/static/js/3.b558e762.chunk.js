@@ -1,2 +1,0 @@
-(this.webpackJsonpshopify=this.webpackJsonpshopify||[]).push([[3],{44:function(s,t,i){"use strict";i.r(t);i(0);var c=i(1);t.default=function(s){var t=s.src;return Object(c.jsx)("img",{src:t,alt:"No Post",style:{width:"100%"}})}}}]);
-//# sourceMappingURL=3.b558e762.chunk.js.map
