@@ -172,11 +172,10 @@ const Master = (props) => {
 					<div className="col-sm-10">
 						<div className="row justify-content-center">
 							<Suspense fallback="">
-								<Helmet>
-									{/* <link rel="icon" href="%PUBLIC_URL%/favicon.ico" /> */}
+								{/* <Helmet>
 									<meta name="description" content={header.brand_description} />
 									<link rel="apple-touch-icon" href={header.brand_logo} />
-								</Helmet>
+								</Helmet> */}
 								<div className={classes.wrapper}>
 									{header.length === 0 ? (
 										<Skeleton
