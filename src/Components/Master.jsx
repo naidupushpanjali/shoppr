@@ -1,4 +1,5 @@
 import Axios from "axios";
+import Helmet from "react-helmet";
 import config from "../services/config.json";
 import Skeleton from "@material-ui/lab/Skeleton";
 import { makeStyles } from "@material-ui/core/styles";
@@ -169,85 +170,95 @@ const Master = (props) => {
 	// });
 
 	return (
-		<div className="container">
-			<div className="row justify-content-center">
-				<div className="col-sm-10">
-					<div className="row justify-content-center">
-						<Suspense fallback="">
-							<div className={classes.wrapper}>
-								{header.length === 0 ? (
-									<Skeleton
-										style={{ backgroundColor: "#cacaca" }}
-										variant="circle"
-										className={classes.skeleton_logo}
-									></Skeleton>
-								) : (
-									<ImageComponent
-										src={header.brand_logo}
-										section="header"
-										onAddDefaultSrc={handleAddDefaultSrc}
-									/>
-								)}
-								<div className={classes.brand_information}>
+		<>
+			<div className="container">
+				<div className="row justify-content-center">
+					<div className="col-sm-10">
+						<div className="row justify-content-center">
+							<Suspense fallback="">
+								<Helmet>
+									{/* <link rel="icon" href="%PUBLIC_URL%/favicon.ico" /> */}
+									<meta name="description" content={header.brand_description} />
+									<link rel="apple-touch-icon" href={header.brand_logo} />
+								</Helmet>
+								<div className={classes.wrapper}>
 									{header.length === 0 ? (
 										<Skeleton
-											variant="text"
-											className={classes.skeleton_brand_info}
-											animation="wave"
+											style={{ backgroundColor: "#cacaca" }}
+											variant="circle"
+											className={classes.skeleton_logo}
 										></Skeleton>
 									) : (
-										<h1 className={classes.h1}>{header.brand_name}</h1>
+										<ImageComponent
+											src={header.brand_logo}
+											section="header"
+											onAddDefaultSrc={handleAddDefaultSrc}
+										/>
 									)}
-									{header.length === 0 ? (
-										<Skeleton
-											variant="text"
-											className={classes.skeleton_brand_desc}
-											animation="wave"
-										></Skeleton>
-									) : (
-										<p className={classes.brand_description}>
-											{header.brand_description}
-										</p>
-									)}
+									<div className={classes.brand_information}>
+										{header.length === 0 ? (
+											<Skeleton
+												variant="text"
+												className={classes.skeleton_brand_info}
+												animation="wave"
+											></Skeleton>
+										) : (
+											<h1 className={classes.h1}>{header.brand_name}</h1>
+										)}
+										{header.length === 0 ? (
+											<Skeleton
+												variant="text"
+												className={classes.skeleton_brand_desc}
+												animation="wave"
+											></Skeleton>
+										) : (
+											<p className={classes.brand_description}>
+												{header.brand_description}
+											</p>
+										)}
+									</div>
 								</div>
-							</div>
-						</Suspense>
+							</Suspense>
+						</div>
+					</div>
+				</div>
+				<div className="row justify-content-center">
+					<div className="col-sm-10">
+						<ResponsiveMasonry
+							columnsCountBreakPoints={{ 350: 3, 750: 3, 900: 3 }}
+						>
+							{listItems.length !== 0 ? (
+								<Masonry columnsCount={3} gutter="15px" className="masonary">
+									{listItems.map((listItem) => (
+										<Suspense key={listItem.post_details.ID} fallback="">
+											<ImageComponent
+												src={
+													listItem.post_meta.social_post_image
+														? listItem.post_meta.social_post_image
+														: ""
+												}
+												section="body"
+												listItem={listItem}
+												header={header}
+												onAddDefaultSrc={handleAddDefaultSrc}
+											/>
+										</Suspense>
+									))}
+								</Masonry>
+							) : (
+								<div className={classes.skeleton}>{rows}</div>
+							)}
+						</ResponsiveMasonry>
+						{isFetching && listItems.length !== 0 && (
+							<CircularProgress
+								color="secondary"
+								className={classes.circular}
+							/>
+						)}
 					</div>
 				</div>
 			</div>
-			<div className="row justify-content-center">
-				<div className="col-sm-10">
-					<ResponsiveMasonry
-						columnsCountBreakPoints={{ 350: 3, 750: 3, 900: 3 }}
-					>
-						{listItems.length !== 0 ? (
-							<Masonry columnsCount={3} gutter="15px" className="masonary">
-								{listItems.map((listItem) => (
-									<Suspense key={listItem.post_details.ID} fallback="">
-										<ImageComponent
-											src={
-												listItem.post_meta.social_post_image
-													? listItem.post_meta.social_post_image
-													: ""
-											}
-											section="body"
-											listItem={listItem}
-											header={header}
-											onAddDefaultSrc={handleAddDefaultSrc}
-										/>
-									</Suspense>
-								))}
-							</Masonry>
-						) : (
-							<div className={classes.skeleton}>{rows}</div>
-						)}
-					</ResponsiveMasonry>
-					{isFetching && listItems.length !== 0 && (
-						<CircularProgress color="secondary" className={classes.circular} />
-					)}
-				</div>
-			</div>
-		</div>
+		</>
 	);
 };
 

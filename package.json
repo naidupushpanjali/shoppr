@@ -9,6 +9,7 @@
 		"dotenv": "^8.2.0",
 		"react": "^17.0.1",
 		"react-dom": "^17.0.1",
+		"react-helmet": "^6.1.0",
 		"react-lazy-load-image-component": "^1.5.1",
 		"react-scripts": "4.0.2",
 		"web-vitals": "^1.1.0",
