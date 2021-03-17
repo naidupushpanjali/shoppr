@@ -38,7 +38,7 @@ const ImageComponent = ({
 	const classes = useStyles();
 
 	return section === "header" ? (
-		<a href="!#">
+		<a href="/#">
 			<LazyLoadImage
 				src={src}
 				alt=""
