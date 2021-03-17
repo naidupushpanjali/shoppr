@@ -165,10 +165,6 @@ const Master = (props) => {
 		);
 	}
 
-	// window.dataLayer.push({
-	// 	event: "pageview",
-	// });
-
 	return (
 		<>
 			<div className="container">
