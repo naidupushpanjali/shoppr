@@ -1,4 +1,5 @@
 import React from "react";
+// import TagManager from "react-gtm-module";
 import { makeStyles } from "@material-ui/core/styles";
 import VideocamIcon from "@material-ui/icons/Videocam";
 import PhotoLibraryIcon from "@material-ui/icons/PhotoLibrary";
@@ -9,6 +10,7 @@ const useStyles = makeStyles((theme) => ({
 	brand_image: {
 		borderRadius: "50%",
 		transition: " all .4s ease-out",
+		border: "1px solid #eee",
 		[theme.breakpoints.down("xs")]: {
 			width: "23%",
 		},
@@ -20,6 +22,11 @@ const useStyles = makeStyles((theme) => ({
 		color: "#fff",
 	},
 }));
+
+// const tagManagerArgs = {
+// 	gtmId: "AW-773054766",
+// };
+// TagManager.initialize(tagManagerArgs);
 
 const ImageComponent = ({
 	src,

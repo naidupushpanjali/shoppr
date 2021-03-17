@@ -6,7 +6,6 @@ import React, { useState, useEffect, Suspense } from "react";
 import ImagePlaceholder from "../images/image_placeholder.png";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
-// import Loader from "./Loader/Loader";
 
 const ImageComponent = React.lazy(() => import("./ImageComponent"));
 
@@ -62,8 +61,8 @@ const useStyles = makeStyles((theme) => ({
 		height: 250,
 		margin: "15px",
 		[theme.breakpoints.down("xs")]: {
-			width: 80,
-			height: 80,
+			width: 118,
+			height: 118,
 			margin: 10,
 		},
 	},
@@ -164,6 +163,10 @@ const Master = (props) => {
 			></Skeleton>
 		);
 	}
+
+	// window.dataLayer.push({
+	// 	event: "pageview",
+	// });
 
 	return (
 		<div className="container">
