@@ -99,15 +99,6 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const instance = createInstance({
-	urlBase: "https://analytics.shoppr.io/",
-	siteId: 15,
-	trackerUrl: "https://analytics.shoppr.io/piwik.php", // optional, default value: `${urlBase}matomo.php`
-	srcUrl: "https://analytics.shoppr.io/piwik.js", // optional, default value: `${urlBase}matomo.js`
-	disabled: true, // optional, false by default. Makes all tracking calls no-ops if set to true.
-	linkTracking: true, // optional, default value: true
-});
-
 const Master = (props) => {
 	const [listItems, setListItems] = useState([]);
 	const [header, setHeader] = useState([]);
@@ -116,6 +107,16 @@ const Master = (props) => {
 	const [data, setData] = useState(true);
 	let fetching = false;
 	const classes = useStyles();
+	const instance = createInstance({
+		urlBase: "http://analytics.shoppr.io/",
+		siteId: 15,
+		trackerUrl: "http://analytics.shoppr.io/piwik.php", // optional, default value: `${urlBase}matomo.php`
+		srcUrl: "http://analytics.shoppr.io/piwik.js", // optional, default value: `${urlBase}matomo.js`
+		disabled: true, // optional, false by default. Makes all tracking calls no-ops if set to true.
+		linkTracking: true, // optional, default value: true
+	});
+	console.log(instance);
+
 	const { trackPageView, trackEvent } = useMatomo();
 
 	useEffect(() => {
@@ -191,7 +192,6 @@ const Master = (props) => {
 			></Skeleton>
 		);
 	}
-
 	return (
 		<MatomoProvider value={instance}>
 			<div className="container">
