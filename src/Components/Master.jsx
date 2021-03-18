@@ -137,6 +137,7 @@ const Master = (props) => {
 				setData(false);
 				setIsFetching(false);
 			}
+			document.title = data.header.app_config.brand_name;
 			Reactga.initialize(data.header.app_config.google_analytics_code);
 		}, 1000);
 	};
@@ -184,25 +185,19 @@ const Master = (props) => {
 								<Helmet>
 									<meta name="description" content={header.brand_description} />
 									<link rel="apple-touch-icon" href={header.brand_logo} />
-									<meta
-										property="og:site_name"
-										content={header.brand_description}
-									/>
-									<meta
-										property="og:title"
-										content={header.brand_description}
-									/>
+									<meta property="og:site_name" content={header.brand_name} />
+									<meta property="og:title" content={header.brand_name} />
 									<meta
 										property="og:description"
 										content={header.brand_description}
 									/>
+									<meta property="og:image:type" content="image/jpeg" />
 									<meta
 										property="og:image"
 										itemprop="image"
 										content={header.brand_logo}
 									/>
 									<link itemprop="thumbnailUrl" href={header.brand_logo} />
-									<meta property="og:image:type" content="image/jpeg" />
 									<meta property="og:updated_time" content="updatedtime" />
 									<meta property="og:locale" content="en_GB" />
 									<link itemprop="url" href={header.brand_logo} />
