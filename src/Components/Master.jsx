@@ -205,9 +205,7 @@ const Master = (props) => {
 									<meta property="og:image:type" content="image/jpeg" />
 									<meta property="og:updated_time" content="updatedtime" />
 									<meta property="og:locale" content="en_GB" />
-									<span itemprop="image" itemscope itemtype="image/jpeg">
-										<link itemprop="url" href={header.brand_logo} />
-									</span>
+									<link itemprop="url" href={header.brand_logo} />
 								</Helmet>
 								<div className={classes.wrapper}>
 									{header.length === 0 ? (
