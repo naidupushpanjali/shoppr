@@ -103,7 +103,7 @@ const instance = createInstance({
 	urlBase: "https://analytics.shoppr.io/",
 	siteId: 15,
 	trackerUrl: "https://analytics.shoppr.io/piwik.php", // optional, default value: `${urlBase}matomo.php`
-	srcUrl: "https://analytics.shoppr.io/piwik.php", // optional, default value: `${urlBase}matomo.js`
+	srcUrl: "https://analytics.shoppr.io/piwik.js", // optional, default value: `${urlBase}matomo.js`
 	disabled: false, // optional, false by default. Makes all tracking calls no-ops if set to true.
 	heartBeat: {
 		// optional, enabled by default
