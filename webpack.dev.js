@@ -1,5 +1,6 @@
 const path = require("path");
 const webpack = require("webpack");
+const Dotenv = require("dotenv-webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
@@ -79,17 +80,10 @@ module.exports = {
 	},
 	plugins: [
 		new webpack.HotModuleReplacementPlugin(),
-		// enable HMR globally
-		new webpack.DefinePlugin({
-			"process.env.PUBLIC_URL": JSON.stringify(__dirname),
-			"process.env.REACT_APP_SHOPPER_API": JSON.stringify(
-				process.env.REACT_APP_SHOPPER_API
-			),
-		}),
-
 		new HtmlWebpackPlugin({
 			template: "./public/index.html",
 		}),
+		new Dotenv(),
 	],
 	devServer: {
 		contentBase: path.join(__dirname, "/dist/"),

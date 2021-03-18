@@ -1,9 +1,17 @@
 const path = require("path");
+const dotenv = require("dotenv");
 const webpack = require("webpack");
 const TerserPlugin = require("terser-webpack-plugin");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
 
-module.exports = (env, options) => {
+module.exports = (options) => {
+	const env = dotenv.config().parsed;
+
+	// reduce it to a nice object, the same as before
+	const envKeys = Object.keys(env).reduce((prev, next) => {
+		prev[`process.env.${next}`] = JSON.stringify(env[next]);
+		return prev;
+	}, {});
+
 	return {
 		entry: ["babel-polyfill", "./src/index.js"],
 		mode: "production",
@@ -65,18 +73,7 @@ module.exports = (env, options) => {
 			extensions: ["*", ".js", ".jsx"],
 		},
 		plugins: [
-			new webpack.HotModuleReplacementPlugin(),
-			// enable HMR globally
-			new webpack.DefinePlugin({
-				"process.env.PUBLIC_URL": JSON.stringify(__dirname),
-				"process.env.REACT_APP_SHOPPER_API": JSON.stringify(
-					process.env.REACT_APP_SHOPPER_API
-				),
-			}),
-
-			new HtmlWebpackPlugin({
-				template: "./public/index.html",
-			}),
+			new webpack.DefinePlugin(envKeys),
 			new webpack.ProvidePlugin({
 				process: "process",
 			}),
