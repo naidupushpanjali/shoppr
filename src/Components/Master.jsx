@@ -104,20 +104,8 @@ const instance = createInstance({
 	siteId: 15,
 	trackerUrl: "https://analytics.shoppr.io/piwik.php", // optional, default value: `${urlBase}matomo.php`
 	srcUrl: "https://analytics.shoppr.io/piwik.js", // optional, default value: `${urlBase}matomo.js`
-	disabled: false, // optional, false by default. Makes all tracking calls no-ops if set to true.
-	heartBeat: {
-		// optional, enabled by default
-		active: true, // optional, default value: true
-		seconds: 10, // optional, default value: `15
-	},
-	linkTracking: false, // optional, default value: true
-	configurations: {
-		// optional, default value: {}
-		// any valid matomo configuration, all below are optional
-		disableCookies: true,
-		setSecureCookie: true,
-		setRequestMethod: "POST",
-	},
+	disabled: true, // optional, false by default. Makes all tracking calls no-ops if set to true.
+	linkTracking: true, // optional, default value: true
 });
 
 const Master = (props) => {
@@ -183,6 +171,10 @@ const Master = (props) => {
 
 	const handleGoogleAnaytics = (id) => {
 		Reactga.event({
+			action: "Post with Instagram Id : " + id.post_meta.instagram_id,
+			category: "Link Clicked",
+		});
+		trackEvent({
 			action: "Post with Instagram Id : " + id.post_meta.instagram_id,
 			category: "Link Clicked",
 		});
