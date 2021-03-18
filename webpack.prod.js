@@ -1,6 +1,5 @@
 const path = require("path");
 const webpack = require("webpack");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 
 module.exports = (env, options) => {
@@ -65,17 +64,8 @@ module.exports = (env, options) => {
 			extensions: ["*", ".js", ".jsx"],
 		},
 		plugins: [
-			new webpack.HotModuleReplacementPlugin(),
-			// enable HMR globally
-			new webpack.DefinePlugin({
-				"process.env.PUBLIC_URL": JSON.stringify(__dirname),
-				"process.env.REACT_APP_SHOPPER_API": JSON.stringify(
-					"https://manslife.publshr.io/"
-				),
-			}),
-
-			new HtmlWebpackPlugin({
-				template: "./public/index.html",
+			new webpack.ProvidePlugin({
+				process: "process/browser",
 			}),
 		],
 		output: {
