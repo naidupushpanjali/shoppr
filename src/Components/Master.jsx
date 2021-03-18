@@ -107,7 +107,6 @@ const Master = (props) => {
 	const classes = useStyles();
 
 	useEffect(() => {
-		Reactga.initialize("UA-115383009-5");
 		if (data) {
 			fetchData();
 		}
@@ -138,6 +137,7 @@ const Master = (props) => {
 				setData(false);
 				setIsFetching(false);
 			}
+			Reactga.initialize(data.header.app_config.google_analytics_code);
 		}, 1000);
 	};
 

@@ -1,9 +1,11 @@
 const path = require("path");
+const webpack = require("webpack");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 
 module.exports = (env, options) => {
 	return {
-		entry: ["@babel/polyfill", "./src/index.js"],
+		entry: ["babel-polyfill", "./src/index.js"],
 		mode: "production",
 		module: {
 			rules: [
@@ -62,6 +64,20 @@ module.exports = (env, options) => {
 		resolve: {
 			extensions: ["*", ".js", ".jsx"],
 		},
+		plugins: [
+			new webpack.HotModuleReplacementPlugin(),
+			// enable HMR globally
+			new webpack.DefinePlugin({
+				"process.env.PUBLIC_URL": JSON.stringify(__dirname),
+				"process.env.REACT_APP_SHOPPER_API": JSON.stringify(
+					"https://manslife.publshr.io/"
+				),
+			}),
+
+			new HtmlWebpackPlugin({
+				template: "./public/index.html",
+			}),
+		],
 		output: {
 			path: path.resolve(__dirname, "docs"),
 			publicPath: "https://newshoppr.noesis.tech/",
