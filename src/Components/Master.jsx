@@ -1,4 +1,5 @@
 import Axios from "axios";
+import Reactga from "react-ga";
 import Helmet from "react-helmet";
 import config from "../services/config.json";
 import Skeleton from "@material-ui/lab/Skeleton";
@@ -106,6 +107,7 @@ const Master = (props) => {
 	const classes = useStyles();
 
 	useEffect(() => {
+		Reactga.initialize("UA-115383009-5");
 		if (data) {
 			fetchData();
 		}
@@ -151,6 +153,13 @@ const Master = (props) => {
 
 	const handleAddDefaultSrc = (e) => {
 		e.target.src = ImagePlaceholder;
+	};
+
+	const handleGoogleAnaytics = (id) => {
+		Reactga.event({
+			action: "Post with Instagram Id : " + id.post_meta.instagram_id,
+			category: "Link Clicked",
+		});
 	};
 
 	var rows = [];
@@ -236,6 +245,9 @@ const Master = (props) => {
 												listItem={listItem}
 												header={header}
 												onAddDefaultSrc={handleAddDefaultSrc}
+												OnHandleGoogleAnaytics={() =>
+													handleGoogleAnaytics(listItem)
+												}
 											/>
 										</Suspense>
 									))}

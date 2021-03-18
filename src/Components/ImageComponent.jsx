@@ -1,5 +1,4 @@
 import React from "react";
-// import TagManager from "react-gtm-module";
 import { makeStyles } from "@material-ui/core/styles";
 import VideocamIcon from "@material-ui/icons/Videocam";
 import PhotoLibraryIcon from "@material-ui/icons/PhotoLibrary";
@@ -23,17 +22,13 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-// const tagManagerArgs = {
-// 	gtmId: "AW-773054766",
-// };
-// TagManager.initialize(tagManagerArgs);
-
 const ImageComponent = ({
 	src,
 	onAddDefaultSrc,
 	section,
 	listItem,
 	header,
+	OnHandleGoogleAnaytics,
 }) => {
 	const classes = useStyles();
 
@@ -47,7 +42,12 @@ const ImageComponent = ({
 			/>
 		</a>
 	) : listItem.post_meta.has_link === "true" ? (
-		<a href={listItem.post_meta.post_ext_link} target="_blank" rel="noreferrer">
+		<a
+			href={listItem.post_meta.post_ext_link}
+			target="_blank"
+			rel="noreferrer"
+			onClick={OnHandleGoogleAnaytics}
+		>
 			<LazyLoadImage
 				src={src}
 				alt="Post"

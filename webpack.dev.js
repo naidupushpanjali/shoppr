@@ -50,6 +50,7 @@ module.exports = {
 						options: {
 							outputPath: "fonts/",
 							name: "[name].[ext]",
+							esModule: false,
 						},
 					},
 				],

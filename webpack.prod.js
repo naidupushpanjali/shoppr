@@ -35,6 +35,7 @@ module.exports = (env, options) => {
 							options: {
 								outputPath: "fonts/",
 								name: "[name].[ext]",
+								esModule: false,
 							},
 						},
 					],
