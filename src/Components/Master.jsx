@@ -8,6 +8,8 @@ import React, { useState, useEffect, Suspense } from "react";
 import ImagePlaceholder from "../images/image_placeholder.png";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
+import { useMatomo } from "@datapunt/matomo-tracker-react";
+import { MatomoProvider, createInstance } from "@datapunt/matomo-tracker-react";
 
 const ImageComponent = React.lazy(() => import("./ImageComponent"));
 
@@ -97,6 +99,27 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
+const instance = createInstance({
+	urlBase: "https://analytics.shoppr.io/",
+	siteId: 15,
+	trackerUrl: "https://analytics.shoppr.io/piwik.php", // optional, default value: `${urlBase}matomo.php`
+	srcUrl: "https://analytics.shoppr.io/piwik.php", // optional, default value: `${urlBase}matomo.js`
+	disabled: false, // optional, false by default. Makes all tracking calls no-ops if set to true.
+	heartBeat: {
+		// optional, enabled by default
+		active: true, // optional, default value: true
+		seconds: 10, // optional, default value: `15
+	},
+	linkTracking: false, // optional, default value: true
+	configurations: {
+		// optional, default value: {}
+		// any valid matomo configuration, all below are optional
+		disableCookies: true,
+		setSecureCookie: true,
+		setRequestMethod: "POST",
+	},
+});
+
 const Master = (props) => {
 	const [listItems, setListItems] = useState([]);
 	const [header, setHeader] = useState([]);
@@ -105,11 +128,13 @@ const Master = (props) => {
 	const [data, setData] = useState(true);
 	let fetching = false;
 	const classes = useStyles();
+	const { trackPageView, trackEvent } = useMatomo();
 
 	useEffect(() => {
 		if (data) {
 			fetchData();
 		}
+		trackPageView();
 	}, [listItems]);
 
 	const fetchData = async () => {
@@ -176,7 +201,7 @@ const Master = (props) => {
 	}
 
 	return (
-		<>
+		<MatomoProvider value={instance}>
 			<div className="container">
 				<div className="row justify-content-center">
 					<div className="col-sm-10">
@@ -197,10 +222,6 @@ const Master = (props) => {
 										itemprop="image"
 										content={header.brand_logo}
 									/>
-									<link itemprop="thumbnailUrl" href={header.brand_logo} />
-									<meta property="og:updated_time" content="updatedtime" />
-									<meta property="og:locale" content="en_GB" />
-									<link itemprop="url" href={header.brand_logo} />
 								</Helmet>
 								<div className={classes.wrapper}>
 									{header.length === 0 ? (
@@ -282,7 +303,7 @@ const Master = (props) => {
 					</div>
 				</div>
 			</div>
-		</>
+		</MatomoProvider>
 	);
 };
 
