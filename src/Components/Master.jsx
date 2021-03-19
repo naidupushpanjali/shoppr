@@ -8,8 +8,6 @@ import React, { useState, useEffect, Suspense } from "react";
 import ImagePlaceholder from "../images/image_placeholder.png";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
-import { useMatomo } from "@datapunt/matomo-tracker-react";
-import { MatomoProvider, createInstance } from "@datapunt/matomo-tracker-react";
 
 const ImageComponent = React.lazy(() => import("./ImageComponent"));
 
@@ -107,23 +105,11 @@ const Master = (props) => {
 	const [data, setData] = useState(true);
 	let fetching = false;
 	const classes = useStyles();
-	const instance = createInstance({
-		urlBase: "http://analytics.shoppr.io/",
-		siteId: 15,
-		trackerUrl: "http://analytics.shoppr.io/piwik.php", // optional, default value: `${urlBase}matomo.php`
-		srcUrl: "http://analytics.shoppr.io/piwik.js", // optional, default value: `${urlBase}matomo.js`
-		disabled: true, // optional, false by default. Makes all tracking calls no-ops if set to true.
-		linkTracking: true, // optional, default value: true
-	});
-	console.log(instance);
-
-	const { trackPageView, trackEvent } = useMatomo();
 
 	useEffect(() => {
 		if (data) {
 			fetchData();
 		}
-		trackPageView();
 	}, [listItems]);
 
 	const fetchData = async () => {
@@ -175,10 +161,6 @@ const Master = (props) => {
 			action: "Post with Instagram Id : " + id.post_meta.instagram_id,
 			category: "Link Clicked",
 		});
-		trackEvent({
-			action: "Post with Instagram Id : " + id.post_meta.instagram_id,
-			category: "Link Clicked",
-		});
 	};
 
 	var rows = [];
@@ -192,110 +174,128 @@ const Master = (props) => {
 			></Skeleton>
 		);
 	}
+
+	const id = 15;
+
+	let matomoScript = `
+						var _paq = _paq || [];
+						/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+						_paq.push(["trackPageView"]);
+						_paq.push(["enableLinkTracking"]);
+						(function () {
+							var u = "//analytics.shoppr.io/";
+							_paq.push(["setTrackerUrl", u + "piwik.php"]);
+							_paq.push(["setSiteId", ${id}]);
+							var d = document,
+								g = d.createElement("script"),
+								s = d.getElementsByTagName("script")[0];
+							g.type = "text/javascript";
+							g.async = true;
+							g.defer = true;
+							g.src = u + "piwik.js";
+							s.parentNode.insertBefore(g, s);
+						})();`;
+	document.getElementById("matomo-script").innerHTML = matomoScript;
 	return (
-		<MatomoProvider value={instance}>
-			<div className="container">
-				<div className="row justify-content-center">
-					<div className="col-sm-10">
-						<div className="row justify-content-center">
-							<Suspense fallback="">
-								<Helmet>
-									<meta name="description" content={header.brand_description} />
-									<link rel="apple-touch-icon" href={header.brand_logo} />
-									<meta property="og:site_name" content={header.brand_name} />
-									<meta property="og:title" content={header.brand_name} />
-									<meta
-										property="og:description"
-										content={header.brand_description}
+		<div className="container">
+			<div className="row justify-content-center">
+				<div className="col-sm-10">
+					<div className="row justify-content-center">
+						<Suspense fallback="">
+							<Helmet>
+								<link rel="icon" href={header.brand_logo} />
+								<meta name="description" content={header.brand_description} />
+								<link rel="apple-touch-icon" href={header.brand_logo} />
+								<meta property="og:site_name" content={header.brand_name} />
+								<meta property="og:title" content={header.brand_name} />
+								<meta
+									property="og:description"
+									content={header.brand_description}
+								/>
+								<meta property="og:image:type" content="image/jpeg" />
+								<meta
+									property="og:image"
+									itemprop="image"
+									content={header.brand_logo}
+								/>
+							</Helmet>
+							<div className={classes.wrapper}>
+								{header.length === 0 ? (
+									<Skeleton
+										style={{ backgroundColor: "#cacaca" }}
+										variant="circle"
+										className={classes.skeleton_logo}
+									></Skeleton>
+								) : (
+									<ImageComponent
+										src={header.brand_logo}
+										section="header"
+										onAddDefaultSrc={handleAddDefaultSrc}
 									/>
-									<meta property="og:image:type" content="image/jpeg" />
-									<meta
-										property="og:image"
-										itemprop="image"
-										content={header.brand_logo}
-									/>
-								</Helmet>
-								<div className={classes.wrapper}>
+								)}
+								<div className={classes.brand_information}>
 									{header.length === 0 ? (
 										<Skeleton
-											style={{ backgroundColor: "#cacaca" }}
-											variant="circle"
-											className={classes.skeleton_logo}
+											variant="text"
+											className={classes.skeleton_brand_info}
+											animation="wave"
 										></Skeleton>
 									) : (
-										<ImageComponent
-											src={header.brand_logo}
-											section="header"
-											onAddDefaultSrc={handleAddDefaultSrc}
-										/>
+										<h1 className={classes.h1}>{header.brand_name}</h1>
 									)}
-									<div className={classes.brand_information}>
-										{header.length === 0 ? (
-											<Skeleton
-												variant="text"
-												className={classes.skeleton_brand_info}
-												animation="wave"
-											></Skeleton>
-										) : (
-											<h1 className={classes.h1}>{header.brand_name}</h1>
-										)}
-										{header.length === 0 ? (
-											<Skeleton
-												variant="text"
-												className={classes.skeleton_brand_desc}
-												animation="wave"
-											></Skeleton>
-										) : (
-											<p className={classes.brand_description}>
-												{header.brand_description}
-											</p>
-										)}
-									</div>
+									{header.length === 0 ? (
+										<Skeleton
+											variant="text"
+											className={classes.skeleton_brand_desc}
+											animation="wave"
+										></Skeleton>
+									) : (
+										<p className={classes.brand_description}>
+											{header.brand_description}
+										</p>
+									)}
 								</div>
-							</Suspense>
-						</div>
-					</div>
-				</div>
-				<div className="row justify-content-center">
-					<div className="col-sm-10">
-						<ResponsiveMasonry
-							columnsCountBreakPoints={{ 350: 3, 750: 3, 900: 3 }}
-						>
-							{listItems.length !== 0 ? (
-								<Masonry columnsCount={3} gutter="15px" className="masonary">
-									{listItems.map((listItem) => (
-										<Suspense key={listItem.post_details.ID} fallback="">
-											<ImageComponent
-												src={
-													listItem.post_meta.social_post_image
-														? listItem.post_meta.social_post_image
-														: ""
-												}
-												section="body"
-												listItem={listItem}
-												header={header}
-												onAddDefaultSrc={handleAddDefaultSrc}
-												OnHandleGoogleAnaytics={() =>
-													handleGoogleAnaytics(listItem)
-												}
-											/>
-										</Suspense>
-									))}
-								</Masonry>
-							) : (
-								<div className={classes.skeleton}>{rows}</div>
-							)}
-						</ResponsiveMasonry>
-						{isFetching && listItems.length !== 0 && (
-							<CircularProgress
-								color="secondary"
-								className={classes.circular}
-							/>
-						)}
+							</div>
+						</Suspense>
 					</div>
 				</div>
 			</div>
-		</MatomoProvider>
+			<div className="row justify-content-center">
+				<div className="col-sm-10">
+					<ResponsiveMasonry
+						columnsCountBreakPoints={{ 350: 3, 750: 3, 900: 3 }}
+					>
+						{listItems.length !== 0 ? (
+							<Masonry columnsCount={3} gutter="15px" className="masonary">
+								{listItems.map((listItem) => (
+									<Suspense key={listItem.post_details.ID} fallback="">
+										<ImageComponent
+											src={
+												listItem.post_meta.social_post_image
+													? listItem.post_meta.social_post_image
+													: ""
+											}
+											section="body"
+											listItem={listItem}
+											header={header}
+											onAddDefaultSrc={handleAddDefaultSrc}
+											OnHandleGoogleAnaytics={() =>
+												handleGoogleAnaytics(listItem)
+											}
+										/>
+									</Suspense>
+								))}
+							</Masonry>
+						) : (
+							<div className={classes.skeleton}>{rows}</div>
+						)}
+					</ResponsiveMasonry>
+					{isFetching && listItems.length !== 0 && (
+						<CircularProgress color="secondary" className={classes.circular} />
+					)}
+				</div>
+			</div>
+		</div>
 	);
 };
 
