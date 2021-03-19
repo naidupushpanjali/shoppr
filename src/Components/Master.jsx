@@ -136,6 +136,31 @@ const Master = (props) => {
 			} else {
 				setData(false);
 				setIsFetching(false);
+				// Meta tags in head
+				if (header.length > 0 || header !== undefined) {
+					var metaDescriptions = document.createElement("div");
+					metaDescriptions.innerHTML = `<link rel="icon" href=${header.brand_logo} />
+						<meta name="description" content=${header.brand_description} />
+						<link rel="apple-touch-icon" href=${header.brand_logo} />
+						<meta property="og:site_name" content=${header.brand_name} />
+						<meta property="og:title" content=${header.brand_name} />
+						<meta
+							property="og:description"
+							content=${header.brand_description}
+						/>
+						<meta property="og:image:type" content="image/jpeg" />
+						<meta
+							property="og:image"
+							itemprop="image"
+							content=${header.brand_logo}
+						/>`;
+
+					var head = document.head;
+
+					while (metaDescriptions.firstChild) {
+						head.appendChild(metaDescriptions.firstChild);
+					}
+				}
 			}
 			document.title = data.header.app_config.brand_name;
 			Reactga.initialize(data.header.app_config.google_analytics_code);
@@ -178,31 +203,32 @@ const Master = (props) => {
 	const id = 15;
 
 	let matomoScript = `
-						var _paq = _paq || [];
-						/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
-						_paq.push(["trackPageView"]);
-						_paq.push(["enableLinkTracking"]);
-						(function () {
-							var u = "//analytics.shoppr.io/";
-							_paq.push(["setTrackerUrl", u + "piwik.php"]);
-							_paq.push(["setSiteId", ${id}]);
-							var d = document,
-								g = d.createElement("script"),
-								s = d.getElementsByTagName("script")[0];
-							g.type = "text/javascript";
-							g.async = true;
-							g.defer = true;
-							g.src = u + "piwik.js";
-							s.parentNode.insertBefore(g, s);
-						})();`;
+		var _paq = _paq || [];
+		/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+		_paq.push(["trackPageView"]);
+		_paq.push(["enableLinkTracking"]);
+		(function () {
+			var u = "//analytics.shoppr.io/";
+			_paq.push(["setTrackerUrl", u + "piwik.php"]);
+			_paq.push(["setSiteId", ${id}]);
+			var d = document,
+				g = d.createElement("script"),
+				s = d.getElementsByTagName("script")[0];
+			g.type = "text/javascript";
+			g.async = true;
+			g.defer = true;
+			g.src = u + "piwik.js";
+			s.parentNode.insertBefore(g, s);
+		})();`;
 	document.getElementById("matomo-script").innerHTML = matomoScript;
+
 	return (
 		<div className="container">
 			<div className="row justify-content-center">
 				<div className="col-sm-10">
 					<div className="row justify-content-center">
 						<Suspense fallback="">
-							<Helmet>
+							{/* <Helmet>
 								<link rel="icon" href={header.brand_logo} />
 								<meta name="description" content={header.brand_description} />
 								<link rel="apple-touch-icon" href={header.brand_logo} />
@@ -218,7 +244,7 @@ const Master = (props) => {
 									itemprop="image"
 									content={header.brand_logo}
 								/>
-							</Helmet>
+							</Helmet> */}
 							<div className={classes.wrapper}>
 								{header.length === 0 ? (
 									<Skeleton
