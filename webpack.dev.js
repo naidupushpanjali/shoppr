@@ -80,6 +80,9 @@ module.exports = {
 	},
 	plugins: [
 		new webpack.HotModuleReplacementPlugin(),
+		new webpack.DefinePlugin({
+			"process.env.PUBLIC_URL": JSON.stringify(__dirname),
+		}),
 		new HtmlWebpackPlugin({
 			template: "./public/index.html",
 		}),
@@ -90,6 +93,7 @@ module.exports = {
 		compress: false,
 		host: "localhost",
 		port: 3000,
+		publicPath: "/",
 
 		historyApiFallback: true,
 		// respond to 404s with index.html
