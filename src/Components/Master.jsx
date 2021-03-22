@@ -199,10 +199,10 @@ const Master = (props) => {
 			></Skeleton>
 		);
 	}
-
-	const id = 15;
-
-	let matomoScript = `
+	debugger;
+	const matomo_id = header.matomo_site_id;
+	if (matomo_id) {
+		let matomoScript = `
 		var _paq = _paq || [];
 		/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
 		_paq.push(["trackPageView"]);
@@ -210,7 +210,7 @@ const Master = (props) => {
 		(function () {
 			var u = "//analytics.shoppr.io/";
 			_paq.push(["setTrackerUrl", u + "piwik.php"]);
-			_paq.push(["setSiteId", ${id}]);
+			_paq.push(["setSiteId", ${header.matomo_site_id}]);
 			var d = document,
 				g = d.createElement("script"),
 				s = d.getElementsByTagName("script")[0];
@@ -220,7 +220,8 @@ const Master = (props) => {
 			g.src = u + "piwik.js";
 			s.parentNode.insertBefore(g, s);
 		})();`;
-	document.getElementById("matomo-script").innerHTML = matomoScript;
+		document.getElementById("matomo-script").innerHTML = matomoScript;
+	}
 
 	return (
 		<div className="container">
