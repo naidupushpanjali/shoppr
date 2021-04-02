@@ -7,7 +7,7 @@ import { Route, BrowserRouter, Switch } from "react-router-dom";
 function App(props) {
 	return (
 		<div className="main-component">
-			<BrowserRouter>
+			<BrowserRouter basename={process.env.PUBLIC_URL}>
 				<Switch>
 					{/* <Redirect to="/" from="/quiz" /> */}
 					{/* <Route exact path="/register" component={ImageComponent} /> */}
