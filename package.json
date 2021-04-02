@@ -16,9 +16,10 @@
 		"wget": "0.0.1"
 	},
 	"scripts": {
+		"predeploy": "npm run build",
 		"deploy": "gh-pages -d build",
 		"start": "react-scripts start",
-		"build": "react-scriclepts build",
+		"build": "react-scripts build",
 		"test": "react-scripts test",
 		"eject": "react-scripts eject",
 		"serve": "webpack serve --config webpack.dev.js --open",
@@ -72,8 +73,8 @@
 		"react-responsive-masonry": "^2.1.1",
 		"react-router": "^5.2.0",
 		"react-router-dom": "^5.2.0",
-		"webpack": "^5.26.3",
+		"webpack": "^4.44.2",
 		"webpack-cli": "^4.5.0",
-		"webpack-dev-server": "^3.11.2"
+		"webpack-dev-server": "^3.11.0"
 	}
 }
