@@ -199,29 +199,6 @@ const Master = (props) => {
 			></Skeleton>
 		);
 	}
-	debugger;
-	const matomo_id = header.matomo_site_id;
-	if (matomo_id) {
-		let matomoScript = `
-		var _paq = _paq || [];
-		/* tracker methods like "setCustomDimension" should be called before "trackPageView" */
-		_paq.push(["trackPageView"]);
-		_paq.push(["enableLinkTracking"]);
-		(function () {
-			var u = "//analytics.shoppr.io/";
-			_paq.push(["setTrackerUrl", u + "piwik.php"]);
-			_paq.push(["setSiteId", ${header.matomo_site_id}]);
-			var d = document,
-				g = d.createElement("script"),
-				s = d.getElementsByTagName("script")[0];
-			g.type = "text/javascript";
-			g.async = true;
-			g.defer = true;
-			g.src = u + "piwik.js";
-			s.parentNode.insertBefore(g, s);
-		})();`;
-		document.getElementById("matomo-script").innerHTML = matomoScript;
-	}
 
 	return (
 		<div className="container">
